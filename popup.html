@@ -1,0 +1,28 @@
+<!-- popup.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    #result {
+      white-space: pre-wrap;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zotero DOI PDF Finder</h1>
+  <label for="collectionsDropdown">Select Collection:</label>
+  <select id="collectionsDropdown">
+    <option value="">Select a collection</option>
+  </select>
+  <button id="fetchItems">Fetch Items with DOIs but no PDFs</button>
+  <div id="result"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
