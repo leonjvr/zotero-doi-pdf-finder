@@ -1,5 +1,3 @@
-<!-- popup.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +11,15 @@
       white-space: pre-wrap;
       margin-top: 20px;
     }
+    .item {
+      margin: 5px 0;
+    }
+    .status {
+      margin-left: 10px;
+    }
+    #error {
+      color: red;
+    }
   </style>
 </head>
 <body>
@@ -21,8 +28,17 @@
   <select id="collectionsDropdown">
     <option value="">Select a collection</option>
   </select>
-  <button id="fetchItems">Fetch Items with DOIs but no PDFs</button>
+  <label for="pageInput">Page:</label>
+  <input type="number" id="pageInput" value="1" min="1">
+  <label for="itemsPerPageInput">Items Per Page:</label>
+  <input type="number" id="itemsPerPageInput" value="10" min="1">
+  <button id="fetchItems">Fetch Items</button>
   <div id="result"></div>
+  <button id="startProcess" style="margin-top: 10px;">Start</button>
+  <button id="stopProcess" style="margin-top: 10px;">Stop</button>
+  <div id="status"></div>
+  <div id="debugInfo" style="margin-top: 10px;"></div>
+  <div id="error"></div>
   <script src="popup.js"></script>
 </body>
 </html>

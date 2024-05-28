@@ -1,5 +1,3 @@
-// background.js
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "getSelectedCollection") {
     fetch("http://127.0.0.1:23119/connector/getSelectedCollection", {
@@ -28,31 +26,36 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.action === "getItemsWithDOIsButNoPDFs") {
-    fetch(`http://127.0.0.1:23119/connector/loadCollection?target=${request.collectionId}`, {
+    console.log("Fetching items with DOIs but no PDFs:", request);
+    fetch('http://localhost:23119/zotserver/getItemsInCollection', {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify({
+        libraryID: parseInt(request.libraryID, 10),
+        objectType: "item",
+        scopeObject: "collections",
+        scopeObjectKey: parseInt(request.scopeObjectKey, 10),
+        doi: 1,
+        attachment: 0,
+        sort: "doi",
+        order: "A",
+        page: parseInt(request.page, 10),
+        itemsPerPage: parseInt(request.itemsPerPage, 10)
+      })
     })
     .then(response => {
       console.log("getItemsWithDOIsButNoPDFs response:", response);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.error(`HTTP error! status: ${response.status}`);
+        return response.text().then(text => { throw new Error(`HTTP error! status: ${response.status}, text: ${text}`); });
       }
       return response.json();
     })
     .then(data => {
       console.log("getItemsWithDOIsButNoPDFs data:", data);
-      if (!data || !data.items) {
-        throw new Error("Invalid response structure: 'items' not found.");
-      }
-
-      const items = data.items.filter(item => {
-        return item.data.DOI && !item.data.attachments.some(att => att.contentType === "application/pdf");
-      }).sort((a, b) => a.data.DOI.localeCompare(b.data.DOI));
-
-      console.log("Filtered items:", items);
-      sendResponse({ items });
+      sendResponse({ data });
     })
     .catch(error => {
       console.error("Error in getItemsWithDOIsButNoPDFs:", error);
